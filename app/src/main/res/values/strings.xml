@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">first_app_project</string>
+    <string name="activity_all_places">All Places</string>
+    <string name="activity_place">Place Details</string>
+    <string name="activity_already_seen">Places You Already Seen</string>
+    <string name="actiyvity_favorite">Favorite Places</string>
+    <string name="activity_want_to_see">Your Must To See List</string>
+    <string name="activity_currently_reading">Books Are Curently Reading</string>
+</resources>
