@@ -18,12 +18,15 @@ import java.util.ArrayList;
 public class PlaceActivity extends AppCompatActivity {
 
     public static final String PLACE_ID_KEY ="placeId";
-    private TextView txtPlaceName, txtYear,txtDescription, ratingBarDescription[] = new TextView[3];
-    private Button btnAddToWantToSee, btnAddToAlreadySeen,
+    private TextView txtPlaceName, txtYear,txtDescription, ratingBarDescription[] = new TextView[3], txtRatingAverage;
+    private Button btnAddToWantToSee, btnAddToAlreadySeen, btnRanking,
     btnAddToFavourite;
     private ImageView placeImage;
     private RatingBar[] ratingBarsArray = new RatingBar[3];
+    private RatingBar ratingAverage;
     private int placeId = -1;
+
+    private float[] ratingArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +43,24 @@ public class PlaceActivity extends AppCompatActivity {
         ratingBarsArray[0] = findViewById(R.id.ratingBarThingsToSee);
         ratingBarsArray[1] = findViewById(R.id.ratingBarPrices);
         ratingBarsArray[2] = findViewById(R.id.ratingBarFood);
+        ratingAverage = findViewById(R.id.ratingBarAvarage);
 
         ratingBarDescription[0] = findViewById(R.id.txtRatingThingsToSee);
         ratingBarDescription[1] = findViewById(R.id.txtRatingPrices);
         ratingBarDescription[2] = findViewById(R.id.txtRatingFood);
+        txtRatingAverage = findViewById(R.id.txtRatingAvarage);
+
+        btnRanking = findViewById(R.id.btnRanking);
 
 //todo: get data from recycle view
+
+        for(int i = 0; i < ratingBarsArray.length; i++)
+        {
+            ratingBarsArray[i].setVisibility(View.INVISIBLE);
+            ratingBarDescription[i].setVisibility(View.INVISIBLE);
+            ratingAverage.setVisibility(View.INVISIBLE);
+            txtRatingAverage.setVisibility(View.INVISIBLE);
+        }
 
         Intent intent = getIntent();
         if (null!=intent) {
@@ -69,16 +84,25 @@ public class PlaceActivity extends AppCompatActivity {
                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                     Place thisPlace = Utils.getInstance().getPlaceById(placeId);
                     thisPlace.setRatingArray(v, finalI);
-                    Toast.makeText(getApplicationContext(), "Rating changed to " + thisPlace.getRatingArray(finalI), Toast.LENGTH_SHORT).show();
+                    ratingArray = new float[thisPlace.ratingArray.length];
+                    float ratingSum = 0;
+                    for(int j = 0; j < ratingArray.length; j++)
+                    {
+                        ratingArray[j] = thisPlace.ratingArray[j];
+                        ratingSum += ratingArray[j];
+                    }
+                    ratingAverage.setRating(ratingSum / ratingArray.length);
                 }
             });
         }
-
-        for(int i = 0; i < ratingBarsArray.length; i++)
-        {
-            ratingBarsArray[i].setVisibility(View.INVISIBLE);
-            ratingBarDescription[i].setVisibility(View.INVISIBLE);
-        }
+        btnRanking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PlaceActivity.this, RatingActivity.class);
+                intent.putExtra("placeId", placeId);
+                startActivity(intent);
+            }
+        });
     }
 
     private void handleAlreadySeen(Place place){
@@ -99,6 +123,8 @@ public class PlaceActivity extends AppCompatActivity {
             {
                 ratingBarsArray[i].setVisibility(View.VISIBLE);
                 ratingBarDescription[i].setVisibility(View.VISIBLE);
+                ratingAverage.setVisibility(View.VISIBLE);
+                txtRatingAverage.setVisibility(View.VISIBLE);
             }
         }else{
             btnAddToAlreadySeen.setOnClickListener(new View.OnClickListener() {
@@ -187,6 +213,11 @@ public class PlaceActivity extends AppCompatActivity {
         for(int i = 0; i < ratingBarsArray.length; i ++)
         {
             ratingBarsArray[i].setRating(place.getRatingArray(i));
+        }
+
+        if(getIntent().getFloatExtra("rating", 0) != 0)
+        {
+            ratingAverage.setRating(getIntent().getFloatExtra("rating", 0));
         }
 
         Glide.with(this).asBitmap().load(place.getImageUrl())

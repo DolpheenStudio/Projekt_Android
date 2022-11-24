@@ -55,7 +55,7 @@
                 android:text="Place name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                app:layout_constraintHorizontal_bias="0.188"
+                app:layout_constraintHorizontal_bias="0.149"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/guideline3"
                 app:layout_constraintVertical_bias="0.046" />
@@ -190,7 +190,7 @@
                 android:layout_height="19dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="124dp"
-                android:text="Avarage Rating"
+                android:text="Average Rating"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -218,6 +218,7 @@
                 android:scaleX="1"
                 android:scaleY="1"
                 android:stepSize="0.5"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txtRatingThingsToSee" />
 
@@ -270,6 +271,17 @@
                 android:stepSize="0.5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txtRatingAvarage" />
+
+            <Button
+                android:id="@+id/btnRanking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Ranking"
+                app:layout_constraintBottom_toTopOf="@+id/guideline6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline7"
+                app:layout_constraintVertical_bias="0.84000003" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

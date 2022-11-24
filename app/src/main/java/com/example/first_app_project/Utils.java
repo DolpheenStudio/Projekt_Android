@@ -10,7 +10,7 @@ public class Utils {
     private static ArrayList<Place> wantToSee;
     private static ArrayList<Place> favoritePlaces;
 
-    private Utils() {
+    public Utils() {
 
         if(null == allPlaces){
             allPlaces =new ArrayList<>();
@@ -70,7 +70,7 @@ public class Utils {
         return favoritePlaces;
     }
 
-    public Place getPlaceById(int id){
+    public static Place getPlaceById(int id){
         for(Place b: allPlaces){
             if(b.getId()==id){
                 return b;

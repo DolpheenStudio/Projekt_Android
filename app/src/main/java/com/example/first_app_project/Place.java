@@ -5,7 +5,7 @@ public class Place {
     private int id, year;
     private String name,imageUrl, shortDesc,longDesc;
     private Boolean isExpanded;
-    private float[] ratingArray = new float[3];
+    public float[] ratingArray = new float[3];
     public Place(int id, int year, String name, String imageUrl, String shortDesc, String longDesc) {
         this.id = id;
         this.year = year;

@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnAllPlaces,btnAlreadySeen, btnWantToSee, btnFavorite,btnAbout;
+    private Button btnAllPlaces,btnAlreadySeen, btnWantToSee, btnFavorite,btnRating;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,13 +49,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RatingActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
 
     }
 
     private void initViews(){
-        btnAbout = findViewById(R.id.btnAbout);
+        btnRating = findViewById(R.id.btnRating);
         btnAllPlaces=findViewById(R.id.btnAllPlaces);
         btnAlreadySeen=findViewById(R.id.btnAlreadySeen);
         btnWantToSee =findViewById(R.id.btnWantToSee);
