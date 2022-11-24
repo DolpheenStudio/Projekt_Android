@@ -1,11 +1,13 @@
 package com.example.first_app_project;
 
+import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import static com.example.first_app_project.PlaceActivity.PLACE_ID_KEY;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.FrameLayout;
@@ -33,6 +35,7 @@ public class RatingActivity extends AppCompatActivity {
 
         if(getIntent().toString().contains("has extras")) {
             placeId = getIntent().getIntExtra(PLACE_ID_KEY, 0);
+            Toast.makeText(getApplicationContext(), String.valueOf(placeId), Toast.LENGTH_SHORT).show();
         }
 
         placesRatingArray = new float[Utils.getAlreadySeen().size()][2];
@@ -53,6 +56,11 @@ public class RatingActivity extends AppCompatActivity {
         }
 
         if(Utils.getAlreadySeen().size() > 0) {
+            if(placesRatingArray[0][1] == placeId)
+            {
+                firstFrameLayout.setBackgroundColor(Color.RED);
+            }
+
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.add(R.id.firstFrameLayout, new PlaceFragment((int) placesRatingArray[0][1], placesRatingArray[0][0], 1));
             ft.commit();
@@ -61,6 +69,8 @@ public class RatingActivity extends AppCompatActivity {
         {
             parentFrameLayout.addView(createFrameLayout(i, i));
         }
+
+        parentFrameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT * Utils.getAlreadySeen().size()));
     }
 
     private FrameLayout createFrameLayout(int placeIdParam, int index)
@@ -70,9 +80,9 @@ public class RatingActivity extends AppCompatActivity {
         tempFrameLayout.setTranslationY(200 * index);
         tempFrameLayout.setId(placeIdParam);
 
-        if(placeIdParam == placeId)
+        if(placesRatingArray[index][1] == placeId)
         {
-            tempFrameLayout.setBackgroundColor(1);
+            tempFrameLayout.setBackgroundColor(Color.RED);
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
