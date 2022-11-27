@@ -29,18 +29,11 @@ public class Utils {
             favoritePlaces =new ArrayList<>();
             initData();
         }
-
     }
 
     private void initData() {
-        // add inital data
-        allPlaces = new ArrayList<>();
-        allPlaces.add(new Place(1,1952,"Pałac kultury",
-                "https://s3.eu-central-1.amazonaws.com/pressland-cms/cache/article_show_cover_1_1/cv/palac-kultury-i-nauki-w-warszawie.jpeg","nice place","very nice nice place"));
-        allPlaces.add(new Place(2,476,"Koloseum",
-                "https://bi.im-g.pl/im/5f/5a/1a/z27631967Q,Koloseum.jpg","nice place","very nice nice place"));
+        allPlaces = Place.placeArrayList;
     }
-
 
     public static Utils getInstance() {
         if(null != instance){
@@ -50,8 +43,6 @@ public class Utils {
             return instance;
         }
     }
-
-
 
     public static ArrayList<Place> getAllBooks() {
         return allPlaces;

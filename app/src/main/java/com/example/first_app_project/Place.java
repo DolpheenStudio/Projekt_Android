@@ -1,6 +1,10 @@
 package com.example.first_app_project;
 
+import java.util.ArrayList;
+
 public class Place {
+
+    public static ArrayList<Place> placeArrayList = new ArrayList<>();
 
     private int id, year;
     private String name,imageUrl, shortDesc,longDesc;
@@ -18,6 +22,18 @@ public class Place {
         {
             ratingArray[i] = 0;
         }
+
+    }
+
+    public Place(int id, int year, String name, String imageUrl, String shortDesc, String longDesc, float[] ratingArray) {
+        this.id = id;
+        this.year = year;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.shortDesc = shortDesc;
+        this.longDesc = longDesc;
+        this.isExpanded = false;
+        this.ratingArray = ratingArray;
 
     }
 

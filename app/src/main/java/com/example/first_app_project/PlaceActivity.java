@@ -25,6 +25,7 @@ public class PlaceActivity extends AppCompatActivity {
     private RatingBar[] ratingBarsArray = new RatingBar[3];
     private RatingBar ratingAverage;
     private int placeId = -1;
+    SQLiteManager sqLiteManager;
 
     private float[] ratingArray;
 
@@ -32,6 +33,8 @@ public class PlaceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
+
+        sqLiteManager = SQLiteManager.instanceOfDatabase(this);
 
         txtYear = findViewById(R.id.txtYear);
         txtPlaceName = findViewById(R.id.txtPlaceName);
@@ -92,6 +95,7 @@ public class PlaceActivity extends AppCompatActivity {
                         ratingSum += ratingArray[j];
                     }
                     ratingAverage.setRating(ratingSum / ratingArray.length);
+                    sqLiteManager.updatePlaceRatingDB(thisPlace);
                 }
             });
         }
