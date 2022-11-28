@@ -20,7 +20,7 @@ public class PlaceActivity extends AppCompatActivity {
     public static final String PLACE_ID_KEY ="placeId";
     private TextView txtPlaceName, txtYear,txtDescription, ratingBarDescription[] = new TextView[3], txtRatingAverage;
     private Button btnAddToWantToSee, btnAddToAlreadySeen, btnRanking,
-    btnAddToFavourite;
+    btnAddToFavourite, btnDeletePlace;
     private ImageView placeImage;
     private RatingBar[] ratingBarsArray = new RatingBar[3];
     private RatingBar ratingAverage;
@@ -54,6 +54,7 @@ public class PlaceActivity extends AppCompatActivity {
         txtRatingAverage = findViewById(R.id.txtRatingAvarage);
 
         btnRanking = findViewById(R.id.btnRanking);
+        btnDeletePlace = findViewById(R.id.btnDeletePlace);
 
 //todo: get data from recycle view
 
@@ -107,6 +108,25 @@ public class PlaceActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnDeletePlace.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                sqLiteManager.deletePlaceFromDB(Utils.getPlaceById(placeId));
+                Intent intent  = new Intent(PlaceActivity.this, AllPlacesActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(this,MainActivity.class);
+        //when u use back button u will go back to main activity
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
+        startActivity(intent);
     }
 
     private void handleAlreadySeen(Place place){
@@ -137,8 +157,8 @@ public class PlaceActivity extends AppCompatActivity {
                     if(Utils.getInstance().addToAlreadyRead(place)){
                         Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
                         // navigate the user
-                        Intent intent = new Intent(PlaceActivity.this, AlreadySeenPlacesActivity.class);
-                        startActivity(intent);
+                        finish();
+                        startActivity(getIntent());
                     }else{
                         Toast.makeText(PlaceActivity.this,"try one more time",Toast.LENGTH_SHORT).show();
                     }
@@ -167,8 +187,7 @@ public class PlaceActivity extends AppCompatActivity {
                     if(Utils.getInstance().addToWishList(place)){
                         Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
                         // navigate the user
-                        Intent intent = new Intent(PlaceActivity.this, WantToSeeActivity.class);
-                        startActivity(intent);
+                        btnAddToWantToSee.setEnabled(false);
                     }else{
                         Toast.makeText(PlaceActivity.this,"try one more time",Toast.LENGTH_SHORT).show();
                     }
@@ -197,8 +216,7 @@ public class PlaceActivity extends AppCompatActivity {
                     if(Utils.getInstance().addToFavourite(place)){
                         Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
                         // navigate the user
-                        Intent intent = new Intent(PlaceActivity.this, FavouriteActivity.class);
-                        startActivity(intent);
+                        btnAddToFavourite.setEnabled(false);
                     }else{
                         Toast.makeText(PlaceActivity.this,"try one more time",Toast.LENGTH_SHORT).show();
                     }

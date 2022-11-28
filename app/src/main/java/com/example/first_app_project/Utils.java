@@ -5,34 +5,22 @@ import java.util.ArrayList;
 public class Utils {
 
     private static Utils instance;
-    public static ArrayList<Place> allPlaces;
-    private static ArrayList<Place> alreadySeen;
-    private static ArrayList<Place> wantToSee;
-    private static ArrayList<Place> favoritePlaces;
+    public static ArrayList<Place> alreadySeen;
+    public static ArrayList<Place> wantToSee;
+    public static ArrayList<Place> favoritePlaces;
 
     public Utils() {
 
-        if(null == allPlaces){
-            allPlaces =new ArrayList<>();
-            initData();
-        }
         if(null == alreadySeen){
             alreadySeen =new ArrayList<>();
-            initData();
         }
         if(null == wantToSee){
             wantToSee =new ArrayList<>();
-            initData();
         }
 
         if(null == favoritePlaces){
             favoritePlaces =new ArrayList<>();
-            initData();
         }
-    }
-
-    private void initData() {
-        allPlaces = Place.placeArrayList;
     }
 
     public static Utils getInstance() {
@@ -45,7 +33,7 @@ public class Utils {
     }
 
     public static ArrayList<Place> getAllBooks() {
-        return allPlaces;
+        return Place.placeArrayList;
     }
 
     public static ArrayList<Place> getAlreadySeen() {
@@ -62,7 +50,7 @@ public class Utils {
     }
 
     public static Place getPlaceById(int id){
-        for(Place b: allPlaces){
+        for(Place b: Place.placeArrayList){
             if(b.getId()==id){
                 return b;
             }

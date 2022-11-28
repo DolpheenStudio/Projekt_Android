@@ -29,6 +29,7 @@ public class AlreadySeenPlacesActivity extends AppCompatActivity {
         Intent intent = new Intent(this,MainActivity.class);
         //when u use back button u will go back to main activity
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
         startActivity(intent);
     }
     @Override

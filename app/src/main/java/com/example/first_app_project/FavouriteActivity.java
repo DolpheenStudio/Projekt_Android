@@ -25,12 +25,26 @@ public class FavouriteActivity extends AppCompatActivity {
         adapter.setPlaces(Utils.getFavoritePlaces());
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        setContentView(R.layout.activity_favourite);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        RecyclerView recyclerView = findViewById(R.id.booksRecView1);
+        PlaceRecViewAdapter adapter = new PlaceRecViewAdapter(this,"favoritePlaces");
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter.setPlaces(Utils.getFavoritePlaces());
+    }
 
     @Override
     public void onBackPressed(){
         Intent intent = new Intent(this,MainActivity.class);
         //when u use back button u will go back to main activity
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        finish();
         startActivity(intent);
     }
     @Override

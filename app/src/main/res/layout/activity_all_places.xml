@@ -12,8 +12,20 @@
         android:id="@+id/placesRecView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_margin="15dp"
+        android:layout_margin="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="1dp" />
+
+    <Button
+        android:id="@+id/btnAddPlace"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="Add Place"
+        android:textSize="11dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -85,6 +85,17 @@ public class SQLiteManager extends SQLiteOpenHelper {
         }
     }
 
+    public void deletePlaceFromDB(Place place)
+    {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        sqLiteDatabase.delete(TABLE_NAME, ID_FIELD + " =? ", new String[]{String.valueOf(place.getId())});
+        Place.placeArrayList.remove(place);
+        Utils.alreadySeen.remove(place);
+        Utils.wantToSee.remove(place);
+        Utils.favoritePlaces.remove(place);
+    }
+
     public void updatePlaceRatingDB(Place place)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
