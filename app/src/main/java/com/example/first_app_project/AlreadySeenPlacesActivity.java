@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 public class AlreadySeenPlacesActivity extends AppCompatActivity {
 
     @Override
@@ -21,7 +23,17 @@ public class AlreadySeenPlacesActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter.setPlaces(Utils.getAlreadySeen());
+        ArrayList<Place> alreadySeenPlacesArray = new ArrayList<>();
+
+        for(Place tempPlace : Place.placeArrayList)
+        {
+            if(tempPlace.getIsAlreadySeen())
+            {
+                alreadySeenPlacesArray.add(tempPlace);
+            }
+        }
+
+        adapter.setPlaces(alreadySeenPlacesArray);
     }
 
     @Override

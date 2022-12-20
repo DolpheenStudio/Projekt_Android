@@ -3,6 +3,7 @@ package com.example.first_app_project;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,7 @@ public class PlaceActivity extends AppCompatActivity {
     private RatingBar[] ratingBarsArray = new RatingBar[3];
     private RatingBar ratingAverage;
     private int placeId = -1;
+
     SQLiteManager sqLiteManager;
 
     private float[] ratingArray;
@@ -74,9 +76,9 @@ public class PlaceActivity extends AppCompatActivity {
                 if (null != incomingPlace) {
                     setData(incomingPlace);
 
-                    handleAlreadySeen(incomingPlace);
-                    handleWantToSeePlaces(incomingPlace);
-                    handleFavoritePlaces(incomingPlace);
+                    handleAlreadySeen(placeId - 1);
+                    handleWantToSeePlaces(placeId - 1);
+                    handleFavoritePlaces(placeId - 1);
                 }
             }
         }
@@ -129,97 +131,70 @@ public class PlaceActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void handleAlreadySeen(Place place){
-        ArrayList<Place> alreadyReadBooks = Utils.getInstance().getAlreadySeen();
-
-        boolean existInAlreadySeen = false;
-
-        for(Place b: alreadyReadBooks){
-            if(b.getId() == place.getId()){
-                existInAlreadySeen = true;
-                break;
-            }
-        }
-
-        if(existInAlreadySeen){
+    private void handleAlreadySeen(int placeId){
+        if(Place.placeArrayList.get(placeId).getIsAlreadySeen()){
             btnAddToAlreadySeen.setEnabled(false);
             for(int i = 0; i < ratingBarsArray.length; i++)
             {
                 ratingBarsArray[i].setVisibility(View.VISIBLE);
                 ratingBarDescription[i].setVisibility(View.VISIBLE);
-                ratingAverage.setVisibility(View.VISIBLE);
-                txtRatingAverage.setVisibility(View.VISIBLE);
             }
+            ratingAverage.setVisibility(View.VISIBLE);
+            txtRatingAverage.setVisibility(View.VISIBLE);
+
+            float ratingSum = 0;
+            ratingArray = new float[Place.placeArrayList.get(placeId).ratingArray.length];
+            for(int j = 0; j < ratingArray.length; j++)
+            {
+                ratingArray[j] = Place.placeArrayList.get(placeId).ratingArray[j];
+                ratingSum += ratingArray[j];
+            }
+            ratingAverage.setRating(ratingSum / ratingArray.length);
         }else{
             btnAddToAlreadySeen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(Utils.getInstance().addToAlreadyRead(place)){
-                        Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
-                        // navigate the user
-                        finish();
-                        startActivity(getIntent());
-                    }else{
-                        Toast.makeText(PlaceActivity.this,"try one more time",Toast.LENGTH_SHORT).show();
-                    }
+                    Place.placeArrayList.get(placeId).setIsAlreadySeen(true);
+                    sqLiteManager.updatePlaceRatingDB(Place.placeArrayList.get(placeId));
+                    Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
+                    // navigate the user
+                    finish();
+                    startActivity(getIntent());
                 }
             });
         }
     }
 
-    private void handleWantToSeePlaces(final Place place){
-        ArrayList<Place> wantToSee = Utils.getInstance().getWantToSee();
-
-        boolean existInWantToSee = false;
-
-        for(Place b: wantToSee){
-            if(b.getId() == place.getId()){
-                existInWantToSee=true;
-            }
-        }
-
-        if(existInWantToSee){
+    private void handleWantToSeePlaces(final int placeId){
+        if(Place.placeArrayList.get(placeId).getIsWantToSee()){
             btnAddToWantToSee.setEnabled(false);
         }else{
             btnAddToWantToSee.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(Utils.getInstance().addToWishList(place)){
-                        Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
-                        // navigate the user
-                        btnAddToWantToSee.setEnabled(false);
-                    }else{
-                        Toast.makeText(PlaceActivity.this,"try one more time",Toast.LENGTH_SHORT).show();
-                    }
+                    Place.placeArrayList.get(placeId).setIsWantToSee(true);
+                    sqLiteManager.updatePlaceRatingDB(Place.placeArrayList.get(placeId));
+                    Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
+                    // navigate the user
+                    btnAddToWantToSee.setEnabled(false);
                 }
             });
         }
     }
 
-    private void handleFavoritePlaces(final Place place){
-        ArrayList<Place> favoritePlaces = Utils.getInstance().getFavoritePlaces();
+    private void handleFavoritePlaces(final int placeId){
 
-        boolean existInFavoritePlaces = false;
-
-        for(Place b: favoritePlaces){
-            if(b.getId() == place.getId()){
-                existInFavoritePlaces=true;
-            }
-        }
-
-        if(existInFavoritePlaces){
+        if(Place.placeArrayList.get(placeId).getIsFavourite()){
             btnAddToFavourite.setEnabled(false);
         }else{
             btnAddToFavourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(Utils.getInstance().addToFavourite(place)){
-                        Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
-                        // navigate the user
-                        btnAddToFavourite.setEnabled(false);
-                    }else{
-                        Toast.makeText(PlaceActivity.this,"try one more time",Toast.LENGTH_SHORT).show();
-                    }
+                    Place.placeArrayList.get(placeId).setIsFavourite(true);
+                    sqLiteManager.updatePlaceRatingDB(Place.placeArrayList.get(placeId));
+                    Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
+                    // navigate the user
+                    btnAddToFavourite.setEnabled(false);
                 }
             });
         }
@@ -242,8 +217,7 @@ public class PlaceActivity extends AppCompatActivity {
             ratingAverage.setRating(getIntent().getFloatExtra("rating", 0));
         }
 
-        Glide.with(this).asBitmap().load(place.getImageUrl())
-            .into(placeImage);
+        placeImage.setImageURI(place.getImageUri());
 
     }
 

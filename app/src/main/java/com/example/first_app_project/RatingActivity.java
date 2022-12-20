@@ -38,24 +38,35 @@ public class RatingActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), String.valueOf(placeId), Toast.LENGTH_SHORT).show();
         }
 
-        placesRatingArray = new float[Utils.getAlreadySeen().size()][2];
+        ArrayList<Place> alreadySeenPlaces = new ArrayList<>();
 
-        for(int i = 0; i < Utils.getAlreadySeen().size(); i++)
+        int idx = 0;
+        for(Place tempPlace : Place.placeArrayList)
+        {
+            if(tempPlace.getIsAlreadySeen())
+            {
+                alreadySeenPlaces.add(tempPlace);
+            }
+        }
+
+        placesRatingArray = new float[alreadySeenPlaces.size()][2];
+
+        for(int i = 0; i < alreadySeenPlaces.size(); i++)
         {
             float ratingSum = 0;
-            for(int j = 0; j < Utils.getAlreadySeen().get(i).ratingArray.length; j++)
+            for(int j = 0; j < alreadySeenPlaces.get(i).ratingArray.length; j++)
             {
-                ratingSum += Utils.getAlreadySeen().get(i).ratingArray[j];
+                ratingSum += alreadySeenPlaces.get(i).ratingArray[j];
             }
-            placesRatingArray[i][0] = ratingSum / Utils.getAlreadySeen().get(i).ratingArray.length;
-            placesRatingArray[i][1] = Utils.getAlreadySeen().get(i).getId();
+            placesRatingArray[i][0] = ratingSum / alreadySeenPlaces.get(i).ratingArray.length;
+            placesRatingArray[i][1] = alreadySeenPlaces.get(i).getId();
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Arrays.sort(placesRatingArray, (a, b) -> Float.compare(b[0], a[0]));
         }
 
-        if(Utils.getAlreadySeen().size() > 0) {
+        if(alreadySeenPlaces.size() > 0) {
             if(placesRatingArray[0][1] == placeId)
             {
                 firstFrameLayout.setBackgroundColor(Color.RED);
@@ -65,12 +76,12 @@ public class RatingActivity extends AppCompatActivity {
             ft.add(R.id.firstFrameLayout, new PlaceFragment((int) placesRatingArray[0][1], placesRatingArray[0][0], 1));
             ft.commit();
         }
-        for(int i = 1; i < Utils.getAlreadySeen().size(); i++)
+        for(int i = 1; i < alreadySeenPlaces.size(); i++)
         {
             parentFrameLayout.addView(createFrameLayout(i, i));
         }
 
-        parentFrameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT * Utils.getAlreadySeen().size()));
+        parentFrameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT * alreadySeenPlaces.size()));
     }
 
     private FrameLayout createFrameLayout(int placeIdParam, int index)

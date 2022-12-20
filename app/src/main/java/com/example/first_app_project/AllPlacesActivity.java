@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class AllPlacesActivity extends AppCompatActivity {
     private RecyclerView placeRecView;
@@ -26,15 +27,8 @@ public class AllPlacesActivity extends AppCompatActivity {
         placeRecView.setAdapter(adapter);
         placeRecView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter.setPlaces(Utils.getInstance().getAllBooks());
+        adapter.setPlaces(Place.placeArrayList);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        btnAddPlace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     @Override
@@ -47,8 +41,17 @@ public class AllPlacesActivity extends AppCompatActivity {
         placeRecView.setAdapter(adapter);
         placeRecView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter.setPlaces(Utils.getInstance().getAllBooks());
+        adapter.setPlaces(Place.placeArrayList);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        btnAddPlace = findViewById(R.id.btnAddPlace);
+        btnAddPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent  = new Intent(AllPlacesActivity.this, AddPlace.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.example.first_app_project;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 public class Place {
@@ -7,14 +9,16 @@ public class Place {
     public static ArrayList<Place> placeArrayList = new ArrayList<>();
 
     private int id, year;
-    private String name,imageUrl, shortDesc,longDesc;
+    private String name, shortDesc,longDesc;
+    private Uri imageUri;
     private Boolean isExpanded;
     public float[] ratingArray = new float[3];
-    public Place(int id, int year, String name, String imageUrl, String shortDesc, String longDesc) {
+    private boolean isAlreadySeen, isWantToSee, isFavourite;
+    public Place(int id, int year, String name, Uri imageUri, String shortDesc, String longDesc) {
         this.id = id;
         this.year = year;
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.imageUri = imageUri;
         this.shortDesc = shortDesc;
         this.longDesc = longDesc;
         this.isExpanded = false;
@@ -22,18 +26,25 @@ public class Place {
         {
             ratingArray[i] = 0;
         }
-
+        isAlreadySeen = false;
+        isWantToSee = false;
+        isFavourite = false;
     }
 
-    public Place(int id, int year, String name, String imageUrl, String shortDesc, String longDesc, float[] ratingArray) {
+    public Place(int id, int year, String name, Uri imageUri, String shortDesc, String longDesc, float[] ratingArray,
+                 boolean isAlreadySeen, boolean isWantToSee, boolean isFavourite) {
         this.id = id;
         this.year = year;
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.imageUri = imageUri;
         this.shortDesc = shortDesc;
         this.longDesc = longDesc;
         this.isExpanded = false;
         this.ratingArray = ratingArray;
+
+        this.isAlreadySeen = isAlreadySeen;
+        this.isWantToSee = isWantToSee;
+        this.isFavourite = isFavourite;
 
     }
 
@@ -69,12 +80,12 @@ public class Place {
         this.name = name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Uri getImageUri() {
+        return imageUri;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUri(String imageUrl) {
+        this.imageUri = imageUri;
     }
 
     public String getShortDesc() {
@@ -97,6 +108,18 @@ public class Place {
 
     public void setRatingArray(float rating, int index) { this.ratingArray[index] = rating; }
 
+    public boolean getIsWantToSee() {return this.isWantToSee;}
+
+    public void setIsWantToSee(boolean wantToSee) {this.isWantToSee = wantToSee;}
+
+    public boolean getIsAlreadySeen() {return this.isAlreadySeen;}
+
+    public void setIsAlreadySeen(boolean alreadySeen) {this.isAlreadySeen = alreadySeen;}
+
+    public boolean getIsFavourite() {return this.isFavourite;}
+
+    public void setIsFavourite(boolean favourite) {this.isFavourite = favourite;}
+
 
     @Override
     public String toString() {
@@ -104,7 +127,7 @@ public class Place {
                 "id=" + id +
                 ", year=" + year +
                 ", name='" + name + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", imageUri='" + imageUri + '\'' +
                 ", shortDesc='" + shortDesc + '\'' +
                 ", longDesc='" + longDesc + '\'' +
                 '}';

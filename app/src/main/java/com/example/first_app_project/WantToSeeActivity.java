@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 public class WantToSeeActivity extends AppCompatActivity {
 
     @Override
@@ -22,7 +24,17 @@ public class WantToSeeActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter.setPlaces(Utils.getWantToSee());
+        ArrayList<Place> wantToSeePlacesArray = new ArrayList<>();
+
+        for(Place tempPlace : Place.placeArrayList)
+        {
+            if(tempPlace.getIsWantToSee())
+            {
+                wantToSeePlacesArray.add(tempPlace);
+            }
+        }
+
+        adapter.setPlaces(wantToSeePlacesArray);
     }
 
 

@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 public class FavouriteActivity extends AppCompatActivity {
 
     @Override
@@ -22,21 +24,16 @@ public class FavouriteActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter.setPlaces(Utils.getFavoritePlaces());
-    }
+        ArrayList<Place> favouritePlacesArray = new ArrayList<>();
+        for(Place tempPlace : Place.placeArrayList)
+        {
+            if(tempPlace.getIsFavourite())
+            {
+                favouritePlacesArray.add(tempPlace);
+            }
+        }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        setContentView(R.layout.activity_favourite);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        RecyclerView recyclerView = findViewById(R.id.booksRecView1);
-        PlaceRecViewAdapter adapter = new PlaceRecViewAdapter(this,"favoritePlaces");
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        adapter.setPlaces(Utils.getFavoritePlaces());
+        adapter.setPlaces(favouritePlacesArray);
     }
 
     @Override

@@ -28,6 +28,7 @@ public class PlaceRecViewAdapter extends RecyclerView.Adapter<PlaceRecViewAdapte
     private ArrayList<Place> places = new ArrayList<>();
     private Context mContext;
     private String parentActivyty;
+    private SQLiteManager sqLiteManager;
 
     public PlaceRecViewAdapter(Context mContext, String parentActivyty) {
         this.mContext = mContext;
@@ -38,18 +39,17 @@ public class PlaceRecViewAdapter extends RecyclerView.Adapter<PlaceRecViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
+        sqLiteManager = SQLiteManager.instanceOfDatabase(this.mContext);
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_place,parent,false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         Log.d(TAG,"onBindViewHolder: Called");
         holder.txtName.setText(places.get(position).getName());
-        Glide.with(mContext).
-            asBitmap().
-            load(places.get(position).getImageUrl()).
-            into(holder.imgPlace);
+        holder.imgPlace.setImageURI(places.get(position).getImageUri());
 
         holder.parent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +61,7 @@ public class PlaceRecViewAdapter extends RecyclerView.Adapter<PlaceRecViewAdapte
         });
 
 
-        holder.txtDescryption.setText(places.get(position).getShortDesc());
+        holder.txtDescryption.setText(places.get(position).getLongDesc());
 
         if(places.get(position).getExpanded()){
             TransitionManager.beginDelayedTransition(holder.parent);
@@ -75,13 +75,10 @@ public class PlaceRecViewAdapter extends RecyclerView.Adapter<PlaceRecViewAdapte
                 holder.btdDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(Utils.getInstance().removeFromAlreadyRead(places.get(holder.getAdapterPosition()))){
-                            Toast.makeText(mContext," Place removed",Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
-                        }else{
-                            Toast.makeText(mContext, "try again", Toast.LENGTH_SHORT).show();
-                        }
-
+                        places.get(holder.getAdapterPosition()).setIsAlreadySeen(false);
+                        Toast.makeText(mContext,"Place removed ", Toast.LENGTH_SHORT).show();
+                        sqLiteManager.updatePlaceRatingDB(places.get(holder.getAdapterPosition()));
+                        notifyDataSetChanged();
                     }
                 });
 
@@ -92,13 +89,10 @@ public class PlaceRecViewAdapter extends RecyclerView.Adapter<PlaceRecViewAdapte
                 holder.btdDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(Utils.getInstance().removeFromWantToRead(places.get(holder.getAdapterPosition()))){
-                            Toast.makeText(mContext," Place removed",Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
-                        }else{
-                            Toast.makeText(mContext, "try again", Toast.LENGTH_SHORT).show();
-                        }
-
+                        places.get(holder.getAdapterPosition()).setIsWantToSee(false);
+                        Toast.makeText(mContext," Place removed",Toast.LENGTH_SHORT).show();
+                        sqLiteManager.updatePlaceRatingDB(places.get(holder.getAdapterPosition()));
+                        notifyDataSetChanged();
                     }
                 });
 
@@ -108,13 +102,10 @@ public class PlaceRecViewAdapter extends RecyclerView.Adapter<PlaceRecViewAdapte
                 holder.btdDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(Utils.getInstance().removeFromFvouites(places.get(holder.getAdapterPosition()))){
-                            Toast.makeText(mContext," Place removed",Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
-                        }else{
-                            Toast.makeText(mContext, "try again", Toast.LENGTH_SHORT).show();
-                        }
-
+                        places.get(holder.getAdapterPosition()).setIsFavourite(false);
+                        Toast.makeText(mContext," Place removed",Toast.LENGTH_SHORT).show();
+                        sqLiteManager.updatePlaceRatingDB(places.get(holder.getAdapterPosition()));
+                        notifyDataSetChanged();
                     }
                 });
 

@@ -19,20 +19,6 @@ public class MainActivity extends AppCompatActivity {
         initViews();
 
         SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
-        if(Place.placeArrayList.isEmpty())
-        {
-            Place tempPlace1 = new Place(1,1952,"Pałac kultury",
-                    "https://s3.eu-central-1.amazonaws.com/pressland-cms/cache/article_show_cover_1_1/cv/palac-kultury-i-nauki-w-warszawie.jpeg","nice place","very nice nice place");
-            sqLiteManager.addPlaceRatingToDatabase(tempPlace1);
-
-            Place tempPlace2 = new Place(2,476,"Koloseum",
-                    "https://bi.im-g.pl/im/5f/5a/1a/z27631967Q,Koloseum.jpg","nice place","very nice nice place");
-            sqLiteManager.addPlaceRatingToDatabase(tempPlace2);
-        }
-        else
-        {
-
-        }
 
         btnAllPlaces.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void initViews(){
         btnRating = findViewById(R.id.btnRating);
-        btnAllPlaces=findViewById(R.id.btnAllPlaces);
-        btnAlreadySeen=findViewById(R.id.btnAlreadySeen);
-        btnWantToSee =findViewById(R.id.btnWantToSee);
-        btnFavorite =findViewById(R.id.btnFavourite);
+        btnAllPlaces = findViewById(R.id.btnAllPlaces);
+        btnAlreadySeen = findViewById(R.id.btnAlreadySeen);
+        btnWantToSee = findViewById(R.id.btnWantToSee);
+        btnFavorite = findViewById(R.id.btnFavourite);
 
     }
 }
