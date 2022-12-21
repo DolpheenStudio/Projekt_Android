@@ -18,8 +18,6 @@ public class MainActivity extends AppCompatActivity {
         loadFromDBToMemory();
         initViews();
 
-        SQLiteManager sqLiteManager = SQLiteManager.instanceOfDatabase(this);
-
         btnAllPlaces.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

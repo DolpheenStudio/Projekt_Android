@@ -11,6 +11,7 @@ public class Place {
     private int id, year;
     private String name, shortDesc,longDesc;
     private Uri imageUri;
+    private String audioSavePath;
     private Boolean isExpanded;
     public float[] ratingArray = new float[3];
     private boolean isAlreadySeen, isWantToSee, isFavourite;

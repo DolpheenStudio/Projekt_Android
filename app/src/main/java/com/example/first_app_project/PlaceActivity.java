@@ -2,9 +2,12 @@ package com.example.first_app_project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +17,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlaceActivity extends AppCompatActivity {
@@ -21,16 +26,19 @@ public class PlaceActivity extends AppCompatActivity {
     public static final String PLACE_ID_KEY ="placeId";
     private TextView txtPlaceName, txtYear,txtDescription, ratingBarDescription[] = new TextView[3], txtRatingAverage;
     private Button btnAddToWantToSee, btnAddToAlreadySeen, btnRanking,
-    btnAddToFavourite, btnDeletePlace;
+    btnAddToFavourite, btnDeletePlace, btnAudioNote;
     private ImageView placeImage;
     private RatingBar[] ratingBarsArray = new RatingBar[3];
     private RatingBar ratingAverage;
     private int placeId = -1;
 
+    private MediaPlayer mediaPlayer;
+
     SQLiteManager sqLiteManager;
 
     private float[] ratingArray;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +65,7 @@ public class PlaceActivity extends AppCompatActivity {
 
         btnRanking = findViewById(R.id.btnRanking);
         btnDeletePlace = findViewById(R.id.btnDeletePlace);
+        btnAudioNote = findViewById(R.id.btnAudioNote);
 
 //todo: get data from recycle view
 
@@ -76,9 +85,9 @@ public class PlaceActivity extends AppCompatActivity {
                 if (null != incomingPlace) {
                     setData(incomingPlace);
 
-                    handleAlreadySeen(placeId - 1);
-                    handleWantToSeePlaces(placeId - 1);
-                    handleFavoritePlaces(placeId - 1);
+                    handleAlreadySeen(incomingPlace);
+                    handleWantToSeePlaces(incomingPlace);
+                    handleFavoritePlaces(incomingPlace);
                 }
             }
         }
@@ -116,10 +125,68 @@ public class PlaceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sqLiteManager.deletePlaceFromDB(Utils.getPlaceById(placeId));
+                new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Music/" + txtPlaceName.getText().toString() + "AudioNote.mp3").delete();
                 Intent intent  = new Intent(PlaceActivity.this, AllPlacesActivity.class);
                 startActivity(intent);
             }
         });
+
+        btnAudioNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if(mediaPlayer == null) {
+                        mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer mp)
+                            {
+                                mediaPlayer.stop();
+                                mediaPlayer.reset();
+                                mediaPlayer = null;
+                                btnAudioNote.setText("PLAY");
+                            }
+                        });
+                        mediaPlayer.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Music/" + txtPlaceName.getText().toString() + "AudioNote.mp3");
+                    }
+                    if(!mediaPlayer.isPlaying())
+                    {
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                        btnAudioNote.setText("STOP");
+                    }
+                    else
+                    {
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                        mediaPlayer = null;
+                        btnAudioNote.setText("PLAY");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mediaPlayer != null) {
+            if (!mediaPlayer.isPlaying() && mediaPlayer.getCurrentPosition() > 1) {
+                mediaPlayer.start();
+            }
+        }
     }
 
     @Override
@@ -131,8 +198,8 @@ public class PlaceActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void handleAlreadySeen(int placeId){
-        if(Place.placeArrayList.get(placeId).getIsAlreadySeen()){
+    private void handleAlreadySeen(Place place){
+        if(place.getIsAlreadySeen()){
             btnAddToAlreadySeen.setEnabled(false);
             for(int i = 0; i < ratingBarsArray.length; i++)
             {
@@ -143,10 +210,10 @@ public class PlaceActivity extends AppCompatActivity {
             txtRatingAverage.setVisibility(View.VISIBLE);
 
             float ratingSum = 0;
-            ratingArray = new float[Place.placeArrayList.get(placeId).ratingArray.length];
+            ratingArray = new float[place.ratingArray.length];
             for(int j = 0; j < ratingArray.length; j++)
             {
-                ratingArray[j] = Place.placeArrayList.get(placeId).ratingArray[j];
+                ratingArray[j] = place.ratingArray[j];
                 ratingSum += ratingArray[j];
             }
             ratingAverage.setRating(ratingSum / ratingArray.length);
@@ -154,8 +221,8 @@ public class PlaceActivity extends AppCompatActivity {
             btnAddToAlreadySeen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Place.placeArrayList.get(placeId).setIsAlreadySeen(true);
-                    sqLiteManager.updatePlaceRatingDB(Place.placeArrayList.get(placeId));
+                    place.setIsAlreadySeen(true);
+                    sqLiteManager.updatePlaceRatingDB(place);
                     Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
                     // navigate the user
                     finish();
@@ -165,15 +232,15 @@ public class PlaceActivity extends AppCompatActivity {
         }
     }
 
-    private void handleWantToSeePlaces(final int placeId){
-        if(Place.placeArrayList.get(placeId).getIsWantToSee()){
+    private void handleWantToSeePlaces(Place place){
+        if(place.getIsWantToSee()){
             btnAddToWantToSee.setEnabled(false);
         }else{
             btnAddToWantToSee.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Place.placeArrayList.get(placeId).setIsWantToSee(true);
-                    sqLiteManager.updatePlaceRatingDB(Place.placeArrayList.get(placeId));
+                    place.setIsWantToSee(true);
+                    sqLiteManager.updatePlaceRatingDB(place);
                     Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
                     // navigate the user
                     btnAddToWantToSee.setEnabled(false);
@@ -182,16 +249,16 @@ public class PlaceActivity extends AppCompatActivity {
         }
     }
 
-    private void handleFavoritePlaces(final int placeId){
+    private void handleFavoritePlaces(Place place){
 
-        if(Place.placeArrayList.get(placeId).getIsFavourite()){
+        if(place.getIsFavourite()){
             btnAddToFavourite.setEnabled(false);
         }else{
             btnAddToFavourite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Place.placeArrayList.get(placeId).setIsFavourite(true);
-                    sqLiteManager.updatePlaceRatingDB(Place.placeArrayList.get(placeId));
+                    place.setIsFavourite(true);
+                    sqLiteManager.updatePlaceRatingDB(place);
                     Toast.makeText(PlaceActivity.this,"Place added",Toast.LENGTH_SHORT).show();
                     // navigate the user
                     btnAddToFavourite.setEnabled(false);
