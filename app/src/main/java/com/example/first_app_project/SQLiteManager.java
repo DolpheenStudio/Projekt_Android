@@ -12,8 +12,8 @@ import androidx.annotation.Nullable;
 public class SQLiteManager extends SQLiteOpenHelper {
 
     private static SQLiteManager sqLiteManager;
-    private static final String DATABASE_NAME = "PlaceRatingDB";
-    private static final String TABLE_NAME = "PlaceRating";
+    private static final String DATABASE_NAME = "PlacesDB";
+    private static final String TABLE_NAME = "PlacesDBTable";
     private static final String COUNTER = "Counter";
     private static final int DATABASE_VERSION = 1;
 

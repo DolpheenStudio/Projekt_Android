@@ -7,6 +7,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
@@ -70,9 +71,10 @@ public class AddPlace extends AppCompatActivity {
         });
 
         btnAddAudioNote.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
-                if (checkPermission() == true)
+                if (checkPermission())
                 {
                     if(mediaRecorder == null) {
 
@@ -118,7 +120,7 @@ public class AddPlace extends AppCompatActivity {
 
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(AddPlace.this, "New_Audio_Note");
                         builder.setContentTitle("New Audio Note!");
-                        builder.setContentText("New audio note has been added...");
+                        builder.setContentText("New audio note has been added..");
                         builder.setSmallIcon(R.drawable.ic_up_arrow);
                         builder.setAutoCancel(true);
 
