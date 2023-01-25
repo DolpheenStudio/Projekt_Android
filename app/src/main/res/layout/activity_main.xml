@@ -18,14 +18,14 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="100dp"
+        android:layout_width="400dp"
         android:layout_height="200dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="45dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@mipmap/prof" />
+        android:src="@mipmap/logo" />
 
     <Button
         android:id="@+id/btnAllPlaces"
@@ -36,12 +36,14 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:backgroundTint="@color/orange"/>
 
 
 
     <Button
         android:id="@+id/btnAlreadySeen"
+        android:backgroundTint="@color/orange"
         android:layout_width="250dp"
         android:textAllCaps="false"
         android:layout_height="wrap_content"
@@ -52,6 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnAllPlaces" />
 
     <Button
+        android:backgroundTint="@color/orange"
         android:id="@+id/btnWantToSee"
         android:layout_width="250dp"
         android:textAllCaps="false"
@@ -63,6 +66,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnAlreadySeen" />
 
     <Button
+        android:backgroundTint="@color/orange"
         android:id="@+id/btnFavourite"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -75,6 +79,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnWantToSee" />
 
     <Button
+        android:backgroundTint="@color/orange"
         android:id="@+id/btnRating"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
