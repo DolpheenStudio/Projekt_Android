@@ -35,12 +35,10 @@ public class RatingActivity extends AppCompatActivity {
 
         if(getIntent().toString().contains("has extras")) {
             placeId = getIntent().getIntExtra(PLACE_ID_KEY, 0);
-            Toast.makeText(getApplicationContext(), String.valueOf(placeId), Toast.LENGTH_SHORT).show();
         }
 
         ArrayList<Place> alreadySeenPlaces = new ArrayList<>();
 
-        int idx = 0;
         for(Place tempPlace : Place.placeArrayList)
         {
             if(tempPlace.getIsAlreadySeen())
